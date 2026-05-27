@@ -33,12 +33,13 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      process.env.FRONT_END_URL,
+      "https://task-manager-pro-sepia.vercel.app",
+      process.env.FRONT_END_URL,  // keeps it flexible too
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
-)
+);
 
 // Middleware to handle JSON object in req body
 app.use(express.json())
