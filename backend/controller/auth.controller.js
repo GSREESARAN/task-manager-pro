@@ -78,7 +78,12 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc
 
-    res.status(200).cookie("access_token", token, { httpOnly: true }).json(rest)
+    res.status(200).cookie("access_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    }).json(rest)
   } catch (error) {
     next(error)
   }
@@ -131,9 +136,8 @@ export const uploadImage = async (req, res, next) => {
       return next(errorHandler(400, "No file uploaded"))
     }
 
-    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
-      req.file.filename
-    }`
+    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename
+      }`
 
     res.status(200).json({ imageUrl })
   } catch (error) {
@@ -144,7 +148,11 @@ export const uploadImage = async (req, res, next) => {
 export const signout = async (req, res, next) => {
   try {
     res
-      .clearCookie("access_token")
+      .clearCookie("access_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .status(200)
       .json("User has been loggedout successfully!")
   } catch (error) {
